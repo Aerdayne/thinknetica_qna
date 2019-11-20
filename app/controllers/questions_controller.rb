@@ -1,12 +1,15 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+
   expose :question
   expose :questions, -> { Question.all }
+  expose :answers, -> { question.answers }
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
-      redirect_to @question
+      redirect_to @question, notice: 'Your question has been successfully created.'
     else
       render :new
     end
