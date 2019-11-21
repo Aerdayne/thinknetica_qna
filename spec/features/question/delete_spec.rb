@@ -20,6 +20,7 @@ feature 'User can delete their own question', %q{
       click_on 'Delete'
 
       expect(page).to have_text 'Your question has been successfully deleted'
+      expect(page).to_not have_text question_authored.body
     end
 
     scenario 'tries to delete others\' question' do

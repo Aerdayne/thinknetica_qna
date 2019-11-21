@@ -25,7 +25,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if answer.user == current_user
+    if current_user.author_of?(answer)
       answer.destroy
       flash[:notice] = 'Your answer has been successfully removed'
     else
@@ -38,9 +38,5 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
-  end
-
-  def rescue_from_record_not_found(error)
-    render plain: error.message
   end
 end

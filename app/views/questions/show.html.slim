@@ -15,6 +15,6 @@ table
         tr class="row"
           td= index + 1
           td= answer.body
-          - if answer.user == current_user
+          - if current_user&.author_of?(answer)
             td= link_to 'Delete', answer_path(answer), method: :delete
 == render 'answers/form', question: question, answer: question.answers.new

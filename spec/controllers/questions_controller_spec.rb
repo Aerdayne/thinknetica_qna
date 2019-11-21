@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
+  let(:question) { create(:question, :unique, user: user) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -15,6 +15,11 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to assigns(:question)
+      end
+
+      it 'belongs to a user' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(assigns(:question).user).to eq(user) 
       end
     end
 
@@ -59,7 +64,7 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         question.reload
 
-        expect(question.title).to eq('MyString')
+        expect(question.title).to eq('a question')
         expect(question.body).to eq('MyText')
       end
 

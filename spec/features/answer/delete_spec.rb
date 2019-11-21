@@ -7,7 +7,7 @@ feature 'User can delete their own answer', %q{
 } do
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
-  given!(:answer) { create(:answer, user: user, question: question) }
+  given!(:answer) { create(:answer, :unique, user: user, question: question) }
   given(:other_user) { create(:user) }
   given!(:answer_unauthored) { create(:answer, :other, user: other_user, question: question) }
 
@@ -21,6 +21,7 @@ feature 'User can delete their own answer', %q{
       find(class: "row", text: answer.body).click_on 'Delete'
 
       expect(page).to have_text 'Your answer has been successfully removed'
+      expect(page).to_not have_content answer.body
     end
 
     scenario 'tries to delete others\' answer' do

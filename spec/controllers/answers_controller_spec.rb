@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, user: user, question: question) }
+  let(:answer) { create(:answer, :unique, user: user, question: question) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -16,6 +16,16 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to questions/show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(response).to redirect_to question
+      end
+
+      it 'belongs to a question' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns(:answer).question).to eq(question) 
+      end
+
+      it 'belongs to a user' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns(:answer).user).to eq(user) 
       end
     end
 
@@ -59,7 +69,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change answer' do
         answer.reload
 
-        expect(answer.body).to eq('MyString')
+        expect(answer.body).to eq('an answer')
       end
 
       it 're-renders edit view' do
