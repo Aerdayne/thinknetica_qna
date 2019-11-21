@@ -6,18 +6,13 @@ feature 'User can view the list of questions', %q{
   I'd like to be able to view all existing questions
 } do
   given(:user) { create(:user) }
-  given!(:question) { create(:question, user: user)}
+  given!(:question) { create(:question, user: user) }
 
-  describe 'Authenticated user' do
-    background do
-      sign_in(user)
-    end
+  scenario 'Authenticated user views the list of all questions' do
+    sign_in(user)
+    visit questions_path
 
-    scenario 'views the list of all questions' do
-      visit questions_path
-
-      expect(page).to have_content question.title
-    end
+    expect(page).to have_content question.title
   end
 
   scenario 'Unauthenticated user tries to view the list of all questions' do
