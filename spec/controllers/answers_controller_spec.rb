@@ -18,11 +18,6 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to redirect_to question
       end
 
-      it 'belongs to a question' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(assigns(:answer).question).to eq(question) 
-      end
-
       it 'belongs to a user' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(assigns(:answer).user).to eq(user) 
