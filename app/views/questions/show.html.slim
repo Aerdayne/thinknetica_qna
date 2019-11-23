@@ -1,0 +1,19 @@
+h1= question.title
+p= question.body
+- if current_user&.author_of?(question)
+  = link_to 'Delete', question_path(question), method: :delete
+h2= 'Answers:'
+table
+  thead
+    tr
+      th= 'Answer #'
+      th= 'Body'
+      th= 'Actions'
+    - question.answers.each_with_index do |answer, index|
+      - if answer.persisted?
+        tr class="row"
+          td= index + 1
+          td= answer.body
+          - if current_user&.author_of?(answer)
+            td= link_to 'Delete', answer_path(answer), method: :delete
+== render 'answers/form', question: question, answer: question.answers.new

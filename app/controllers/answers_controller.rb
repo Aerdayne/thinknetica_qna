@@ -1,15 +1,18 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+
   expose :question, id: -> { params[:question_id] }
   expose :answer
   expose :answers, -> { Answer.all }
 
   def create
     @answer = question.answers.new(answer_params)
+    @answer.user = current_user
 
     if @answer.save
-      redirect_to @answer
+      redirect_to @answer.question, notice: 'Your answer has been successfully created.'
     else
-      render :new
+      render 'questions/show'
     end
   end
 
@@ -22,8 +25,13 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer.destroy
-    redirect_to question_answers_path(question)
+    if current_user.author_of?(answer)
+      answer.destroy
+      flash[:notice] = 'Your answer has been successfully removed'
+    else
+      flash[:alert] = 'You are not permitted to delete others\' answers'
+    end
+    redirect_to question_path(answer.question)
   end
 
   private

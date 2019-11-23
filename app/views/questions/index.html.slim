@@ -1,0 +1,9 @@
+p= link_to 'Ask a question', new_question_path
+table
+  thead
+    tr
+      th= 'Question #'
+      th= 'Title'
+    - questions.each_with_index do |question, index|
+      == render 'shared/errors', resource: question
+      == render partial: question, locals: { question: question, counter: index + 1 }

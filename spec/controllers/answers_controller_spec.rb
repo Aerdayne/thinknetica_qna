@@ -1,18 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, :unique, user: user, question: question) }
 
   describe 'POST #create' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
       end
 
-      it 'redirects to show view' do
+      it 'redirects to questions/show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to assigns(:answer)
+        expect(response).to redirect_to question
+      end
+
+      it 'belongs to a user' do
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns(:answer).user).to eq(user) 
       end
     end
 
@@ -21,14 +29,16 @@ RSpec.describe AnswersController, type: :controller do
         expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
       end
 
-      it 're-renders new view' do
+      it 're-renders questions/show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
+
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
         post :update, params: { id: answer, answer: attributes_for(:answer) }
@@ -54,7 +64,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change answer' do
         answer.reload
 
-        expect(answer.body).to eq('MyText')
+        expect(answer.body).to eq('an answer')
       end
 
       it 're-renders edit view' do
@@ -64,16 +74,31 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:question) { create(:question) }
-    let!(:answer) { create(:answer, question: question) }
+    context 'authored' do
+      before { login(user) }
+      let!(:answer) { create(:answer, question: question, user: user) }
 
-    it 'deletes the answer' do
-      expect { delete :destroy, params: { question_id: question, id: answer } }.to change(Answer, :count).by(-1)
+      it 'deletes the answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+      end
+
+      it 'redirected to question view' do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
     end
 
-    it 'redirects to index' do
-      delete :destroy, params: { question_id: question, id: answer }
-      expect(response).to redirect_to question_answers_path(question)
+    context 'unauthored' do
+      let!(:answer) { create(:answer, question: question, user: user) }
+
+      it 'does not delete the answer' do
+        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
+      end
+
+      it 'redirected to new_user_session_path' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to new_user_session_path
+      end
     end
   end
 end
