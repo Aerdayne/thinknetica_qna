@@ -6,7 +6,7 @@ class AnswersController < ApplicationController
   expose :answers, -> { Answer.all }
 
   def create
-    @answer = question.answers.create(answer_params)
+    @answer = question.answers.new(answer_params)
     @answer.user = current_user
     @answer.save
 
@@ -16,9 +16,14 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer = answer
-    @answer.update(answer_params)
-    @question = @answer.question
+    answer.update(answer_params)
+
+    respond_to do |format|
+      format.js do
+        @question = answer.question
+        flash.now[:notice] = 'Your answer has been successfully edited.'
+      end
+    end
   end
 
   def destroy
