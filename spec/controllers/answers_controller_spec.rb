@@ -20,7 +20,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'belongs to a user' do
         post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
-        expect(assigns(:answer).user).to eq(user) 
+        expect(assigns(:answer).user).to eq(user)
       end
     end
 
@@ -41,8 +41,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes', js: true do
       it 'assigns the requested answer to @answer' do
-        post :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
-        expect(controller.send(:answer)).to eq(answer)
+        post :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
       end
 
       it 'changes answer attributes' do
@@ -79,12 +78,12 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, question: question, user: user) }
 
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer, format: :js } }.to change(Answer, :count).by(-1)
       end
 
-      it 'redirected to question view' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'redirected to answer' do
+        delete :destroy, params: { question_id: question, id: answer, format: :js }
+        expect(response).to redirect_to answer
       end
     end
 
@@ -92,7 +91,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, question: question, user: user) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { question_id: question, id: answer, format: :js }, format: :js }.to_not change(Answer, :count)
       end
 
       it 'redirected to new_user_session_path' do

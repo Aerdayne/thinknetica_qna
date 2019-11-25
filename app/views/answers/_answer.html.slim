@@ -1,8 +1,9 @@
 tr class="answer"
   td= answer.body
   - if current_user&.author_of?(answer)
-    td= link_to 'Delete', answer_path(answer), method: :delete
+    td= link_to 'Delete', answer_path(answer), method: :delete, data: { answer_id: answer.id, remote: true }, class: 'delete-answer-link'
     td= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    td= link_to 'Mark as best', set_best_answer_path(answer), method: :patch, data: { remote: true }
     td= form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
       = f.label :body, 'Your answer'
       = f.text_area :body

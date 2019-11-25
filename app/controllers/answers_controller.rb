@@ -11,7 +11,13 @@ class AnswersController < ApplicationController
     @answer.save
 
     respond_to do |format|
-      format.js { flash.now[:notice] = 'Your answer has been successfully created.' }
+      format.js do
+        if @answer.persisted?
+          flash.now[:notice] = 'Your answer has been successfully created.'
+        else
+          flash.now[:alert] = 'Your answer has not been created.'
+        end
+      end
     end
   end
 
@@ -21,19 +27,33 @@ class AnswersController < ApplicationController
     respond_to do |format|
       format.js do
         @question = answer.question
-        flash.now[:notice] = 'Your answer has been successfully edited.'
       end
     end
   end
 
   def destroy
-    if current_user.author_of?(answer)
-      answer.destroy
-      flash[:notice] = 'Your answer has been successfully removed'
-    else
-      flash[:alert] = 'You are not permitted to delete others\' answers'
+    current_user.answers.find_by(id: answer.id)&.destroy if current_user&.author_of?(answer)
+
+    respond_to do |format|
+      format.js do
+        @answer = answer
+        if current_user.author_of?(@answer)
+          flash[:notice] = 'Your answer has been successfully removed'
+        else
+          flash[:alert] = 'You are not permitted to delete others\' answers'
+        end
+      end
     end
-    redirect_to question_path(answer.question)
+  end
+
+  def set_best
+    answer.set_best
+
+    respond_to do |format|
+      format.js do
+        @question = answer.question
+      end
+    end
   end
 
   private

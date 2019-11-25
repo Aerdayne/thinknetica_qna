@@ -16,10 +16,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if question.update(question_params)
-      redirect_to question_path(question)
-    else
-      render :edit
+    question.update(question_params)
+
+    respond_to do |format|
+      format.js do
+        @question = question
+      end
     end
   end
 

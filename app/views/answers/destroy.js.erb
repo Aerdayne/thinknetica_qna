@@ -1,7 +1,8 @@
 $('.answer-errors').html('<%= render '/shared/errors', resource: @answer %>');
 $(".alert").remove();
 $(".col-lg-9").prepend('<%= bootstrap_flash %>');
-<% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer %>');
-  $('.answer-new #answer_body').val('');
+<% if current_user&.author_of?(answer) %>
+  $('.delete-answer-link').bind('ajax:success', function() {
+    $(this).closest('tr[class="answer"]').remove();
+  })
 <% end %>

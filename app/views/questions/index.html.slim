@@ -4,6 +4,8 @@ table
     tr
       th= 'Question #'
       th= 'Title'
+  tbody
     - questions.each_with_index do |question, index|
-      == render 'shared/errors', resource: question
-      == render partial: question, locals: { question: question, counter: index + 1 }
+      tr
+        td= index + 1
+        td= link_to question.title, question_path(question)

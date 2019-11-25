@@ -31,7 +31,7 @@ feature 'User can delete their own question', %q{
   end
 
   scenario 'Unauthenticated user does not have an option to delete' do
-    visit question_path(question_authored)
+    visit question_path(question_unauthored)
 
     expect(page).to_not have_link 'Delete'
   end
