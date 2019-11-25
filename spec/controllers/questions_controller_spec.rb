@@ -59,7 +59,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      
+
       it 'does not change question' do
         question.reload
 
@@ -69,6 +69,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 're-renders edit view' do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
         expect(response).to render_template :edit
       end
     end

@@ -39,14 +39,14 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     before { login(user) }
 
-    context 'with valid attributes' do
+    context 'with valid attributes', js: true do
       it 'assigns the requested answer to @answer' do
-        post :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
+        post :update, params: { id: answer, answer: attributes_for(:answer) }, format: :js
         expect(controller.send(:answer)).to eq(answer)
       end
 
       it 'changes answer attributes' do
-        post :update, params: { id: answer, answer: { body: 'new body' } }
+        post :update, params: { id: answer, answer: { body: 'new body' }, format: :js  }
         answer.reload
 
         expect(answer.body).to eq('new body')
@@ -67,8 +67,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq('an answer')
       end
 
-      it 're-renders edit view' do
-        expect(response).to render_template :edit
+      it 're-renders update view' do
+        expect(response).to render_template :update
       end
     end
   end
@@ -92,7 +92,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:answer) { create(:answer, question: question, user: user) }
 
       it 'does not delete the answer' do
-        expect { delete :destroy, params: { question_id: question, id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { question_id: question, id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
       it 'redirected to new_user_session_path' do
