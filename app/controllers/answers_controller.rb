@@ -6,22 +6,19 @@ class AnswersController < ApplicationController
   expose :answers, -> { Answer.all }
 
   def create
-    @answer = question.answers.new(answer_params)
+    @answer = question.answers.create(answer_params)
     @answer.user = current_user
+    @answer.save
 
-    if @answer.save
-      redirect_to @answer.question, notice: 'Your answer has been successfully created.'
-    else
-      render 'questions/show'
+    respond_to do |format|
+      format.js { flash.now[:notice] = 'Your answer has been successfully created.' }
     end
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to answer_path(answer)
-    else
-      render :edit
-    end
+    @answer = answer
+    @answer.update(answer_params)
+    @question = @answer.question
   end
 
   def destroy

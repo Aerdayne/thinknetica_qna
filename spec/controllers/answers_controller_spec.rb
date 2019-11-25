@@ -10,28 +10,28 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to questions/show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
+        expect(response).to render_template :create
       end
 
       it 'belongs to a user' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
+        post :create, params: { question_id: question, answer: attributes_for(:answer), format: :js }
         expect(assigns(:answer).user).to eq(user) 
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js }.to_not change(Answer, :count)
       end
 
       it 're-renders questions/show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid), format: :js }
+        expect(response).to render_template :create
       end
     end
   end
@@ -41,7 +41,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
-        post :update, params: { id: answer, answer: attributes_for(:answer) }
+        post :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
         expect(controller.send(:answer)).to eq(answer)
       end
 
@@ -53,13 +53,13 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'redirects to updated question' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer) }
+        patch :update, params: { id: answer, answer: attributes_for(:answer), format: :js }
         expect(response).to redirect_to answer
       end
     end
 
     context 'with invalid attributes' do
-      before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) } }
+      before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js }
 
       it 'does not change answer' do
         answer.reload
