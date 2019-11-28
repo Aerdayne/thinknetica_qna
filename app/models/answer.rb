@@ -4,13 +4,15 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
 
-  validates :best, uniqueness: { scope: :question_id }, if: :best?
+  validates :best, uniqueness: { scope: :question_id }, if: :best?, presence: true
   validates :body, presence: true
 
   scope :best, -> { where(best: true) }
 
   def set_best
-    question.answers.best.update(best: false)
-    update!(best: true)
+    transaction do
+      question.answers.best.update_all(best: false)
+      update!(best: true)
+    end
   end
 end

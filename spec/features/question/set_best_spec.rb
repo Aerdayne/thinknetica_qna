@@ -7,7 +7,7 @@ feature 'User can mark an answer as the best one', %q{
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
-  given!(:answer) { create(:answer, user: user, question: question) }
+  given!(:answers) { create_list(:answer, 5, user: user, question: question) }
   given(:other_user) { create(:user) }
   given!(:question_unauthored) { create(:question, user: other_user) }
   given!(:answer_unauthored) { create(:answer, user: other_user, question: question_unauthored) }
@@ -20,9 +20,10 @@ feature 'User can mark an answer as the best one', %q{
 
     scenario 'chooses the best answer' do
       within '.answers' do
-        page.find(class: 'answer', text: answer.body).click_on 'Mark as best'
+        last_answer = page.find(".answer[data-id='#{answers.last.id}']")
+        last_answer.click_on 'Mark as best'
 
-        expect(page.find(class: 'answer', match: :first)).to have_content answer.body
+        expect(page.find(class: 'answer', match: :first)).to have_content last_answer.text
       end
     end
 

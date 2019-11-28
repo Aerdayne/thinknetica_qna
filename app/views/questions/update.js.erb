@@ -1,6 +1,6 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: question %>');
+$('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
 $(".alert").remove();
 $(".col-lg-9").prepend('<%= bootstrap_flash %>');
 <% if !question.errors.present? %>
-  $('.question').html('<%= j render @question %>');
+  $('.question').html('<%= j render question %>');
 <% end %>

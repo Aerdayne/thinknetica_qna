@@ -1,1 +1,4 @@
+$('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
+$(".alert").remove();
+$(".col-lg-9").prepend('<%= bootstrap_flash %>');
 $('.answers').html('<%= j render @question.answers %>');

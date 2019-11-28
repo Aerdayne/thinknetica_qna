@@ -1,15 +1,16 @@
 .question-errors
   = render 'shared/errors', resource: question
 
-== render partial: question, locals: { question: question }
+== render question
 
 h2= 'Answers:'
 table
   thead
     tr
-      th= 'Body'
-      th= 'Actions'
-      th
+      th scope='col'= 'Body'
+      th scope='col'= 'Actions'
+      th scope='col'
   tbody class='answers'
     == render question.answers
+br
 == render 'answers/form', question: question, answer: question.answers.new

@@ -2,5 +2,5 @@ $('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
 $(".alert").remove();
 $(".col-lg-9").prepend('<%= bootstrap_flash %>');
 <% if !answer.errors.present? %>
-  $('.answers').html('<%= j render @question.answers %>');
+  $("tr[data-id='<%= answer.id %>']").replaceWith('<%= j render answer %>');
 <% end %>

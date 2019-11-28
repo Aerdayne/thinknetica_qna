@@ -16,13 +16,8 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params)
-
-    respond_to do |format|
-      format.js do
-        @question = question
-      end
-    end
+    question.update(question_params) if current_user.author_of?(question)
+    @question = question
   end
 
   def destroy

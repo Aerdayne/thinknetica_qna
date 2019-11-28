@@ -1,4 +1,4 @@
-$('.answer-errors').html('<%= render '/shared/errors', resource: @answer %>');
+$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 $(".alert").remove();
 $(".col-lg-9").prepend('<%= bootstrap_flash %>');
 <% if @answer.persisted? %>

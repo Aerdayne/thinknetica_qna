@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!, except: %i[show]
 
   expose :question, id: -> { params[:question_id] }
   expose :answer
@@ -10,49 +10,34 @@ class AnswersController < ApplicationController
     @answer.user = current_user
     @answer.save
 
-    respond_to do |format|
-      format.js do
-        if @answer.persisted?
-          flash.now[:notice] = 'Your answer has been successfully created.'
-        else
-          flash.now[:alert] = 'Your answer has not been created.'
-        end
-      end
+    if @answer.persisted?
+      flash.now[:notice] = 'Your answer has been successfully created.'
+    else
+      flash.now[:alert] = 'Your answer has not been created.'
     end
   end
 
   def update
-    answer.update(answer_params)
-
-    respond_to do |format|
-      format.js do
-        @question = answer.question
-      end
-    end
+    answer.update(answer_params) if current_user.author_of?(answer)
+    @question = answer.question
   end
 
   def destroy
-    current_user.answers.find_by(id: answer.id)&.destroy if current_user&.author_of?(answer)
-
-    respond_to do |format|
-      format.js do
-        @answer = answer
-        if current_user.author_of?(@answer)
-          flash[:notice] = 'Your answer has been successfully removed'
-        else
-          flash[:alert] = 'You are not permitted to delete others\' answers'
-        end
-      end
+    if current_user.author_of?(answer)
+      answer.destroy
+      flash[:notice] = 'Your answer has been successfully removed'
+    else
+      flash[:alert] = 'You are not permitted to delete others\' answers'
     end
   end
 
   def set_best
-    answer.set_best
-
-    respond_to do |format|
-      format.js do
-        @question = answer.question
-      end
+    @question = answer.question
+    if current_user.author_of?(@question)
+      answer.set_best
+      flash[:notice] = 'You have marked the best answer to your question'
+    else
+      flash[:alert] = 'You are not permitted to mark answers to others\' questions'
     end
   end
 
