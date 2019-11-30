@@ -1,11 +1,12 @@
 FactoryBot.define do
-  sequence :title do |n|
-    "QuestionTitle#{n}"
-  end
-
   factory :question do
-    title
-    body { "MyText" }
+    sequence :title do |n|
+      "QuestionTitle#{n}"
+    end
+  
+    sequence :body do |n|
+      "QuestionBody#{n}"
+    end
 
     trait :unique do
       title { 'a question' }

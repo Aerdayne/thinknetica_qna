@@ -1,3 +1,12 @@
-tr
-  td= counter
-  td= link_to question.title, question_path(question)
+.question
+  h1= question.title
+  p= question.body
+  - if current_user&.author_of?(question)
+    = link_to 'Delete', question_path(question), method: :delete, class: 'btn btn-primary'
+    = link_to 'Edit', '#', data: { question_id: question.id }, class: 'edit-question-link btn btn-primary'
+    = form_with model: question, html: { id: "edit-question-#{question.id}" }, class: 'hidden' do |f|
+      = f.label :title, 'Question title'
+      = f.text_field :title
+      = f.label :body, 'Question contents'
+      = f.text_area :body
+      = f.submit 'Save'

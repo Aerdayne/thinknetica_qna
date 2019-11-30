@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: %i[index show]
+  before_action :authenticate_user!, except: %i[show]
 
   expose :question, id: -> { params[:question_id] }
   expose :answer
@@ -8,20 +8,18 @@ class AnswersController < ApplicationController
   def create
     @answer = question.answers.new(answer_params)
     @answer.user = current_user
+    @answer.save
 
-    if @answer.save
-      redirect_to @answer.question, notice: 'Your answer has been successfully created.'
+    if @answer.persisted?
+      flash.now[:notice] = 'Your answer has been successfully created.'
     else
-      render 'questions/show'
+      flash.now[:alert] = 'Your answer has not been created.'
     end
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to answer_path(answer)
-    else
-      render :edit
-    end
+    answer.update(answer_params) if current_user.author_of?(answer)
+    @question = answer.question
   end
 
   def destroy
@@ -31,7 +29,16 @@ class AnswersController < ApplicationController
     else
       flash[:alert] = 'You are not permitted to delete others\' answers'
     end
-    redirect_to question_path(answer.question)
+  end
+
+  def set_best
+    @question = answer.question
+    if current_user.author_of?(@question)
+      answer.set_best
+      flash[:notice] = 'You have marked the best answer to your question'
+    else
+      flash[:alert] = 'You are not permitted to mark answers to others\' questions'
+    end
   end
 
   private

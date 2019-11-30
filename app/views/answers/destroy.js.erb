@@ -1,0 +1,6 @@
+$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+$(".alert").remove();
+$(".col-lg-9").prepend('<%= bootstrap_flash %>');
+<% if current_user&.author_of?(answer) %>
+  $("tr[data-id='<%= answer.id %>']").remove();
+<% end %>
