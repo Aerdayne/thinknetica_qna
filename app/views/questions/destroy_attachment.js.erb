@@ -1,6 +1,6 @@
 $('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
 $(".alert").remove();
-$(".col-lg-9").prepend('<%= bootstrap_flash %>');
+$("#main").prepend('<%= bootstrap_flash %>');
 <% if current_user&.author_of?(question) %>
   $("li[data-file-id='<%= @file.id %>']").remove();
 <% end %>

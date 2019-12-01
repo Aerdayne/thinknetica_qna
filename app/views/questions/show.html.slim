@@ -3,8 +3,8 @@
 
 = render question
 
-h2= 'Answers:'
 .answers
+  h2= 'Answers:'
   == render question.answers
 br
 == render 'answers/form', question: question, answer: question.answers.new

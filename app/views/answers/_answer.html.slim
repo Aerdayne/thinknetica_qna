@@ -1,12 +1,13 @@
 = tag.div class: 'answer', data: { id: answer.id }
   hr
-  h4= best_mark(answer)
+  h4 class='card-title' = best_mark(answer)
   - if answer.files.attached?
     ul.answer-files
       - answer.files.each do |file|
         = tag.li class: "file", data: { file_id: file.id }
           = link_to file.filename.to_s, url_for(file), target: "_blank"
-          = link_to 'Remove file', destroy_attachment_answer_path(file_id: file.id, id: answer), method: :delete, remote: true, class: 'btn btn-primary'
+          - if current_user&.author_of?(answer)
+            = link_to 'Remove file', destroy_attachment_answer_path(file_id: file.id, id: answer), method: :delete, remote: true, class: 'btn btn-primary'
   - if current_user&.author_of?(answer.question)
     = link_to 'Mark as best', set_best_answer_path(answer), method: :patch, data: { remote: true }, class: 'btn btn-primary'
   - if current_user&.author_of?(answer)
@@ -20,4 +21,3 @@
         = f.label :files, 'Attach files:'
         = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
       = f.submit 'Save', class: 'btn btn-primary'
-      
