@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
-  expose :question
+  expose :question, scope: -> { Question.with_attached_files }
   expose :questions, -> { Question.all }
   expose :answers, -> { question.answers }
 
@@ -29,9 +29,17 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def destroy_attachment
+    @question = question
+    if current_user.author_of?(question)
+      @file = ActiveStorage::Attachment.find(params[:file_id])
+      @file.purge
+    end
+  end
+
   private
 
   def question_params
-    params.require(:question).permit(:body, :title)
+    params.require(:question).permit(:body, :title, files: [])
   end
 end

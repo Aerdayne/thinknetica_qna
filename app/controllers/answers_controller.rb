@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: %i[show]
 
   expose :question, id: -> { params[:question_id] }
-  expose :answer
+  expose :answer, scope: -> { Answer.with_attached_files }
   expose :answers, -> { Answer.all }
 
   def create
@@ -41,9 +41,16 @@ class AnswersController < ApplicationController
     end
   end
 
+  def destroy_attachment
+    if current_user.author_of?(answer)
+      @file = ActiveStorage::Attachment.find(params[:file_id])
+      @file.purge
+    end
+  end
+
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end

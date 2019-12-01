@@ -1,3 +1,5 @@
+include ActionDispatch::TestProcess
+
 FactoryBot.define do
   sequence :body do |n|
     "AnswerBody#{n}"
