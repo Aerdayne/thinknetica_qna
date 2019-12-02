@@ -111,22 +111,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-
-  describe "PATCH #destroy_attachment" do
-    before do
-      file = fixture_file_upload(Rails.root.join('spec', 'rails_helper.rb'), 'image/png')
-      login(user)
-      post :update, params: { id: question, question: { files: [file] }, format: :js }
-      sign_out(user)
-    end
-
-    it 'authored deletes an attachment' do
-      login(user)
-      expect { delete :destroy_attachment, params: { id: question, file_id: question.files.first.id, format: :js } }.to change(question.files, :count).by(-1)
-    end
-
-    it 'unauthored does not delete an attachment' do
-      expect { delete :destroy_attachment, params: { id: question, file_id: question.files.first.id, format: :js } }.to_not change(question.files, :count)
-    end
-  end
 end
