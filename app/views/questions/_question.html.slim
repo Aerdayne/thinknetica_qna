@@ -20,6 +20,6 @@ div class='question col-12'
     h4 Attached files:
     ul.files
       - question.files.each do |file|
-        = tag.li class: "file", data: { file_id: file.id }
+        = tag.li class: "question file", data: { file_id: file.id }
           = link_to file.filename.to_s, url_for(file), target: "_blank"
-          = link_to 'Remove file', destroy_attachment_question_path(question: question, file_id: file.id), method: :delete, remote: true, class: 'btn btn-primary'
+          = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'

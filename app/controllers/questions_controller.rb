@@ -29,14 +29,6 @@ class QuestionsController < ApplicationController
     end
   end
 
-  def destroy_attachment
-    @question = question
-    if current_user.author_of?(question)
-      @file = ActiveStorage::Attachment.find(params[:file_id])
-      @file.purge
-    end
-  end
-
   private
 
   def question_params
