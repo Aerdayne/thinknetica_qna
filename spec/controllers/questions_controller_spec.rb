@@ -8,7 +8,7 @@ RSpec.describe QuestionsController, type: :controller do
     before { login(user) }
 
     context 'with valid attributes' do
-      it 'saves a new question in the database' do
+      it 'saves a new question to the database' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
       end
 
@@ -19,12 +19,12 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'belongs to a user' do
         post :create, params: { question: attributes_for(:question) }
-        expect(assigns(:question).user).to eq(user) 
+        expect(assigns(:question).user).to eq(user)
       end
     end
 
     context 'with invalid attributes' do
-      it 'does not save a new question in the database' do
+      it 'does not save a new question to the database' do
         expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
       end
 
@@ -38,6 +38,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'PATCH #update' do
     context 'authored' do
       before { login(user) }
+
       context 'with valid attributes' do
         it 'assigns the requested question to @question' do
           post :update, params: { id: question, question: attributes_for(:question), format: :js }
