@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'User can mark an answer as the best one', %q{
   In order to mark the best answer
   As an authenticated user
-  I'd like to be able mark an answer to my question as the best one
+  I'd like to be able to mark an answer to my question as the best one
 } do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }

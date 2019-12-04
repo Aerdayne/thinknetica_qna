@@ -1,0 +1,8 @@
+$('.question-errors').html('<%= render 'shared/errors', resource: @resource %>');
+$(".alert").remove();
+$("#main").prepend('<%= bootstrap_flash %>');
+<% if @resource.is_a? Answer %>
+  $("li.answer[data-file-id='<%= @file.id %>']").remove();
+<% elsif @resource.is_a? Question %>
+  $("li.question[data-file-id='<%= @file.id %>']").remove();
+<% end %>

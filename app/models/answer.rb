@@ -4,6 +4,8 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
 
+  has_many_attached :files
+
   validates :best, uniqueness: { scope: :question_id }, if: :best?, presence: true
   validates :body, presence: true
 

@@ -1,7 +1,8 @@
 $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 $(".alert").remove();
-$(".col-lg-9").prepend('<%= bootstrap_flash %>');
+$("#main").prepend('<%= bootstrap_flash %>');
 <% if @answer.persisted? %>
   $('.answers').append('<%= j render @answer %>');
   $('.answer-new #answer_body').val('');
+  $('.answer-new #answer_files').val('');
 <% end %>

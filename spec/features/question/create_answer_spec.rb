@@ -13,7 +13,6 @@ feature 'User can answer a question', %q{
       sign_in(user)
 
       visit question_path(question)
-      click_on 'Answer'
     end
 
     scenario 'answers a question' do
@@ -28,6 +27,15 @@ feature 'User can answer a question', %q{
       click_on 'Answer'
 
       expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario 'answers a question with several files attached' do
+      fill_in 'Body', with: 'this is an answer'
+      attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Answer'
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
     end
   end
 

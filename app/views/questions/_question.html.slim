@@ -1,12 +1,25 @@
-.question
+div class='question col-12'
   h1= question.title
   p= question.body
   - if current_user&.author_of?(question)
     = link_to 'Delete', question_path(question), method: :delete, class: 'btn btn-primary'
     = link_to 'Edit', '#', data: { question_id: question.id }, class: 'edit-question-link btn btn-primary'
-    = form_with model: question, html: { id: "edit-question-#{question.id}" }, class: 'hidden' do |f|
-      = f.label :title, 'Question title'
-      = f.text_field :title
-      = f.label :body, 'Question contents'
-      = f.text_area :body
-      = f.submit 'Save'
+    = form_with model: question, html: { id: "edit-question-#{question.id}" }, class: 'hidden col-12' do |f|
+      .form-group
+        = f.label :title, 'Question title'
+        = f.text_field :title, class: 'form-control'
+      .form-group
+        = f.label :body, 'Question contents'
+        = f.text_area :body, class: 'form-control'
+      .form-group
+        = f.label :files, 'Attach files:'
+        = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+      = f.submit 'Save', class: 'btn btn-primary'
+  br
+  - if question.files.attached?
+    h4 Attached files:
+    ul.files
+      - question.files.each do |file|
+        = tag.li class: "question file", data: { file_id: file.id }
+          = link_to file.filename.to_s, url_for(file), target: "_blank"
+          = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'

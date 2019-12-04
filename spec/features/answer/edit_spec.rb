@@ -11,17 +11,19 @@ feature 'User can edit their own answer', %q{
   given!(:answer) { create(:answer, question: question, user: user) }
   given!(:unauthered_answer) { create(:answer, question: question, user: other_user) }
 
-  scenario 'Unauthenticated can not edit answer' do
+  scenario 'Unauthenticated can not edit answers' do
     visit question_path(question)
 
     expect(page).to_not have_link 'Edit'
   end
 
   describe 'Authenticated user', js: true do
-    scenario 'edits their own answer' do
+    background do
       sign_in user
       visit question_path(question)
- 
+    end
+
+    scenario 'edits their own answer' do
       within '.answers' do
         click_on 'Edit'
         fill_in 'Your answer', with: 'edited answer'
@@ -34,9 +36,6 @@ feature 'User can edit their own answer', %q{
     end
 
     scenario 'edits their own answer with errors' do
-      sign_in user
-      visit question_path(question)
-
       within '.answers' do
         click_on 'Edit'
         fill_in 'Your answer', with: ''
@@ -48,9 +47,18 @@ feature 'User can edit their own answer', %q{
     end
 
     scenario "tries to edit other user's answer" do
-      visit question_path(question)
-
       expect(page.find(class: 'answer', text: unauthered_answer.body)).to_not have_link 'Edit'
+    end
+
+    scenario 'edits their answer and attaches several files' do
+      page.find(".answer[data-id='#{answer.id}']").click_on 'Edit'
+      within '.answers' do
+        attach_file 'Attach files:', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
     end
   end
 end

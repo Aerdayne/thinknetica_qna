@@ -7,5 +7,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :attachment, only: :destroy
+
   root to: 'questions#index'
 end

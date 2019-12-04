@@ -10,7 +10,7 @@ feature 'User can edit their own question', %q{
   given!(:question) { create(:question, user: user) }
   given!(:question_unauthored) { create(:question, user: other_user)}
 
-  scenario 'Unathenticated user can not edit question' do
+  scenario 'Unathenticated user can not edit questions' do
     visit question_path(question)
 
     expect(page).to_not have_link 'Edit'
@@ -53,6 +53,17 @@ feature 'User can edit their own question', %q{
       visit question_path(question_unauthored)
 
       expect(page).to_not have_link 'Edit'
+    end
+
+    scenario 'edits their question and attaches several files' do
+      within '.question' do
+        click_on 'Edit'
+        attach_file 'Attach files:', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
     end
   end
 end
