@@ -29,4 +29,9 @@
       .form-group
         = f.label :files, 'Attach files:'
         = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+      .form-group
+        = f.fields_for :links do |link|
+          = render 'links/links_fields', f: link
+        .answer-links
+          = link_to_add_association 'Add link', f, :links, html_options = { partial: 'links/links_fields' }
       = f.submit 'Save', class: 'btn btn-primary'
