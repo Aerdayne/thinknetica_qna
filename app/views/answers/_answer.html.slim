@@ -7,7 +7,12 @@
         = tag.li class: "answer file", data: { file_id: file.id }
           = link_to file.filename.to_s, url_for(file), target: "_blank"
           - if current_user&.author_of?(answer)
-            = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'
+            = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary' 
+  .links
+  h4= 'Links:'
+  ul
+    - answer.links.each do |link|
+      li= link_to link.name, link.url, target: '_blank'
   - if current_user&.author_of?(answer.question)
     = link_to 'Mark as best', set_best_answer_path(answer), method: :patch, data: { remote: true }, class: 'btn btn-primary'
   - if current_user&.author_of?(answer)

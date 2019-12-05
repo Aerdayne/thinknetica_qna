@@ -1,10 +1,20 @@
 .answer-errors
   = render 'shared/errors', resource: @answer
-= form_with model: [question, answer], class: 'answer-new' do |f|
+= form_with model: [question, @answer], class: 'answer-new' do |f|
   .form-group
     = f.label :body
     = f.text_area :body, class: 'form-control'
   .form-group
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
+  div
+    h3 Links:
+    div
+      = f.fields_for :links do |l|
+        .form-group
+          = l.label :name, 'Link name'
+          = l.text_field :name, class: 'form-control'
+        .form-group
+          = l.label :url
+          = l.text_field :url, class: 'form-control'
   = f.submit 'Answer', class: 'btn btn-primary'

@@ -3,6 +3,12 @@
 
 = render question
 
+.links
+  h2= 'Links:'
+  ul
+    - question.links.each do |link|
+      li= link_to link.name, link.url, target: '_blank'
+
 .answers
   h2= 'Answers:'
   == render question.answers

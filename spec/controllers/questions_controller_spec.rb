@@ -4,6 +4,44 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, :unique, user: user) }
 
+  describe 'GET #show' do
+    before { get :show, params: { id: question } }
+
+    it 'assigns the requested question to @question' do
+      expect(controller.send(:question)).to eq question
+    end
+
+    it 'assigns a new Answer record to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+
+    it 'adds a new Link record to @answer.links relation' do
+      expect(assigns(:answer).links.first).to be_a_new(Link)
+    end
+
+    it 'renders show view' do
+      expect(response).to render_template :show
+    end
+  end
+
+  describe 'GET #new' do
+    before { login(user) }
+
+    before { get :new }
+
+    it 'assigns a new Question to @question' do
+      expect(assigns(:question)).to be_a_new(Question)
+    end
+
+    it 'assigns a new Question to @question' do
+      expect(assigns(:question).links.first).to be_a_new(Link)
+    end
+
+    it 'renders new view' do
+      expect(response).to render_template :new
+    end
+  end
+
   describe 'POST #create' do
     before { login(user) }
 
