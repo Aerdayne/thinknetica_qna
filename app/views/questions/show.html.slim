@@ -3,16 +3,20 @@
 
 = render question
 
-.links
-  h2= 'Links:'
-  ul
+- if question.links.any?
+  h2 Links
+  ul.question-links
     - question.links.each do |link|
-      li= link_to link.name, link.url, target: '_blank'
-      - if link.url_is_gist?
-        = javascript_include_tag("#{link.url}.js", 'data-turbolinks-track': 'reload')
+      = tag.li class: "question-link", data: { link_id: link.id }
+        = link_to link.name, link.url, target: '_blank'
+        - if current_user&.author_of?(question)
+          = link_to 'Remove link', link_path(id: link.id), method: :delete, remote: true, class: 'btn btn-primary'
+        - if link.url_is_gist?
+            = javascript_include_tag("#{link.url}.js", 'data-turbolinks-track': 'reload')
 
 .answers
   h2= 'Answers:'
   == render question.answers
 br
+h2= 'Answer the question:'
 == render 'answers/form', question: question, answer: question.answers.new

@@ -9,6 +9,7 @@ FactoryBot.define do
   end
 
   trait :gist do
+    name { "Gist link" }
     url { "https://gist.github.com/jacksonfdam/3000275" }
   end
 end

@@ -5,4 +5,5 @@ $("#main").prepend('<%= bootstrap_flash %>');
   $('.answers').append('<%= j render @answer %>');
   $('.answer-new #answer_body').val('');
   $('.answer-new #answer_files').val('');
+  $('.nested-fields').remove();
 <% end %>
