@@ -8,13 +8,10 @@
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true, class: 'form-control'
   div
-    h3 Links:
-    div
-      = f.fields_for :links do |l|
-        .form-group
-          = l.label :name, 'Link name'
-          = l.text_field :name, class: 'form-control'
-        .form-group
-          = l.label :url
-          = l.text_field :url, class: 'form-control'
+    p Links:
+    #answer-links
+      = f.fields_for :links do |link|
+        = render 'links/links_fields', f: link
+      .answer-links
+        = link_to_add_association 'Add link', f, :links, html_options = { partial: 'links/links_fields' }
   = f.submit 'Answer', class: 'btn btn-primary'
