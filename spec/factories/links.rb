@@ -1,6 +1,14 @@
 FactoryBot.define do
   factory :link do
-    name { "MyString" }
-    url { "MyString" }
+    name { "A link" }
+    url { "http://google.com" }
+  end
+
+  trait :invalid do
+    url { "invalid url" }
+  end
+
+  trait :gist do
+    url { "https://gist.github.com/jacksonfdam/3000275" }
   end
 end
