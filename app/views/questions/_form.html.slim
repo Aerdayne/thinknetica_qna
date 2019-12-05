@@ -12,12 +12,9 @@
     = f.file_field :files, multiple: true, direct_upload: true
   div
     p Links:
-    div
-      = f.fields_for :links do |l|
-        div
-          = l.label :name, 'Link name'
-          = l.text_field :name
-        div
-          = l.label :url
-          = l.text_field :url
+    #question-links
+      = f.fields_for :links do |link|
+        = render 'links/links_fields', f: link
+      .question-links
+        = link_to_add_association 'Add link', f, :links, html_options = { partial: 'links/links_fields' }
   = f.submit 'Ask'
