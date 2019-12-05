@@ -33,8 +33,12 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to be_a_new(Question)
     end
 
-    it 'assigns a new Question to @question' do
+    it 'adds a new Link to @question.links relation' do
       expect(assigns(:question).links.first).to be_a_new(Link)
+    end
+
+    it 'assigns a new Reward to @reward' do
+      expect(assigns(:reward)).to be_a_new(Reward)
     end
 
     it 'renders new view' do

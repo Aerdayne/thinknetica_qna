@@ -17,4 +17,14 @@
         = render 'links/links_fields', f: link
       .question-links
         = link_to_add_association 'Add link', f, :links, html_options = { partial: 'links/links_fields' }
+  div.reward
+    p Reward:
+    = f.fields_for :reward do |reward|
+      .nested-fields
+        .field
+          = reward.label :name, 'Reward name'
+          = reward.text_field :name
+        .field
+          = reward.label :file, 'Image'
+          = reward.file_field :file, direct_upload: true
   = f.submit 'Ask'
