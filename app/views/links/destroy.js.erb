@@ -1,10 +1,10 @@
 $('.question-errors').html('<%= render 'shared/errors', resource: @resource %>');
 $(".alert").remove();
 $("#main").prepend('<%= bootstrap_flash %>');
-<% if @link.linkable.is_a? Answer %>
-  $("li.answer-link[data-link-id='<%= @link.id %>']").remove();
-<% elsif @link.linkable.is_a? Question %>
-  $("li.question-link[data-link-id='<%= @link.id %>']").remove();
+<% if @resource.is_a? Answer %>
+  $("li.answer-link[data-link-id='<%= link.id %>']").remove();
+<% elsif @resource.is_a? Question %>
+  $("li.question-link[data-link-id='<%= link.id %>']").remove();
 <% end %>
-$("input[type='hidden'][value='<%= @link.id %>']").prev().remove();
-$("input[type='hidden'][value='<%= @link.id %>']").remove();
+$("input[type='hidden'][value='<%= link.id %>']").prev().remove();
+$("input[type='hidden'][value='<%= link.id %>']").remove();
