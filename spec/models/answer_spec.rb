@@ -8,23 +8,43 @@ RSpec.describe Answer, type: :model do
 
   describe '#set_best' do
     let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
-    let!(:answer) { create(:answer, question: question, user: user, best: true) }
+    let(:other_user) { create(:user) }
+    let!(:question) { create(:question, user: user) }
+    let!(:reward) { create(:reward, question: question, file: fixture_file_upload(Rails.root.join('spec', 'rails_helper.rb'), 'image/png')) }
+    let!(:answer) { create(:answer, question: question, user: user, best: false) }
+    let!(:other_answer) { create(:answer, question: question, user: other_user, best: false) }
 
     it 'does not allow for two answers to both be the best concurrently' do
-      other_answer = Answer.new(user: user, question: question, body: '123', best: true)
-      other_answer.save
+      answer.set_best
+      answer.reload
+      answer_artificial = Answer.new(user: user, question: question, body: '123', best: true)
+      answer_artificial.save
 
-      expect(other_answer).to_not be_valid
+      expect(answer_artificial).to_not be_valid
     end
 
     it 'sets the new best answer' do
-      other_answer = Answer.create(user: user, question: question, body: '321')
+      answer.set_best
+      other_answer.set_best
+
+      expect(other_answer.reload).to be_best
+      expect(answer.reload).to_not be_best
+    end
+
+    it 'gives out a reward to the author' do
+      answer.set_best
+      answer.reload
+
+      expect(reward.user).to eq(answer.user)
+    end
+
+    it 'reassigns the reward owner' do
+      answer.set_best
+      answer.reload
       other_answer.set_best
       other_answer.reload
 
-      expect(other_answer).to be_best
-      expect(answer.reload).to_not be_best
+      expect(reward.user).to eq(other_answer.user)
     end
   end
 end
