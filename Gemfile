@@ -9,7 +9,7 @@ gem 'devise'
 
 gem 'pg'
 
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 4.3'
 
 gem 'sass-rails', '>= 6'
 
