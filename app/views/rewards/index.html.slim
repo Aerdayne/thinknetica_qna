@@ -1,0 +1,10 @@
+table
+  thead
+    tr
+      th= 'Reward name'
+      th= 'Image'
+  tbody
+    - rewards.each do |reward|
+      tr
+        td= reward.name
+        td= link_to reward.file.filename.to_s, url_for(reward.file), target: "_blank"

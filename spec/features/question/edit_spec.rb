@@ -65,5 +65,29 @@ feature 'User can edit their own question', %q{
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'
     end
+
+    scenario 'edits their answer and attaches several links' do
+      click_on 'Edit'
+
+      within '.question' do
+        click_on 'Add link'
+        click_on 'Add link'
+
+        within all('.nested-fields')[0] do
+          fill_in 'Link name', with: 'attached link'
+          fill_in 'Url', with: 'https://google.com'
+        end
+
+        within all('.nested-fields')[1] do
+          fill_in 'Link name', with: 'another attached link'
+          fill_in 'Url', with: 'https://google.com'
+        end
+
+        click_on 'Save'
+      end
+
+      expect(page).to have_link 'attached link'
+      expect(page).to have_link 'another attached link'
+    end
   end
 end
