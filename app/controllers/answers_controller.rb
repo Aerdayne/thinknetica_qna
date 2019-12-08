@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: %i[show]
 
   expose :question, id: -> { params[:question_id] }

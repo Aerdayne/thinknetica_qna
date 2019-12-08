@@ -27,7 +27,7 @@ feature 'User can mark an answer as the best one', %q{
         last_answer = page.find(".answer[data-id='#{answers.last.id}']")
         last_answer.click_on 'Mark as best'
 
-        expect(page.find(class: 'answer', match: :first)).to have_content last_answer.text
+        expect(page.find(class: 'answer', match: :first)).to have_content answers.last.body
       end
     end
 

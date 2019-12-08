@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  include Votable
+
   default_scope -> { order(best: :desc, updated_at: :desc) }
 
   belongs_to :question
@@ -11,7 +13,7 @@ class Answer < ApplicationRecord
   accepts_nested_attributes_for :links, reject_if: :all_blank
 
   validates :best, uniqueness: { scope: :question_id }, if: :best?, presence: true
-  validates :body, presence: true
+  validates :body, :score, presence: true
 
   scope :best, -> { where(best: true) }
 
