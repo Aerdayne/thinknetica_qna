@@ -8,26 +8,21 @@ module Voted
   end
 
   def upvote
-    return head :forbidden if current_user.author_of?(@resource) || !signed_in?
+    return head :forbidden if current_user.author_of?(@resource)
 
-    if @votes.upvotes.find_by(votable: @resource)
-      @resource.unvote(current_user)
-    else
-      @resource.unvote(current_user)
-      @resource.upvote(current_user)
-    end
+    vote = @votes.find_by(votable: @resource)
+    p vote
+    @resource.unvote(current_user)
+    @resource.upvote(current_user) unless vote
     send_json
   end
 
   def downvote
-    return head :forbidden if current_user.author_of?(@resource) || !signed_in?
+    return head :forbidden if current_user.author_of?(@resource)
 
-    if @votes.downvotes.find_by(votable: @resource)
-      @resource.unvote(current_user)
-    else
-      @resource.unvote(current_user)
-      @resource.downvote(current_user)
-    end
+    vote = @votes.find_by(votable: @resource)
+    @resource.unvote(current_user)
+    @resource.downvote(current_user) unless vote
     send_json
   end
 

@@ -11,7 +11,7 @@ module Votable
   end
 
   def downvote(user)
-    votes.create!(user: user, value: 0)
+    votes.create!(user: user, value: -1)
     update_votable_score
   end
 
@@ -23,6 +23,6 @@ module Votable
   private
 
   def update_votable_score
-    update!(score: votes.upvotes.size - votes.downvotes.size)
+    update!(score: votes.sum(:value))
   end
 end
