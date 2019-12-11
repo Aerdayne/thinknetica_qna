@@ -11,7 +11,6 @@ module Voted
     return head :forbidden if current_user.author_of?(@resource)
 
     vote = @votes.find_by(votable: @resource)
-    p vote
     @resource.unvote(current_user)
     @resource.upvote(current_user) unless vote
     send_json
