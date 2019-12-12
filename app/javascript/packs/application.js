@@ -9,6 +9,7 @@ require("channels")
 require("jquery")
 require("cocoon")
 
+require("packs/votes")
 require("packs/answers")
 require("packs/questions")
 // Uncomment to copy all static images under ../images to the output folder and reference

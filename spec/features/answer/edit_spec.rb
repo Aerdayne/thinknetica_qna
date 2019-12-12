@@ -9,7 +9,7 @@ feature 'User can edit their own answer', %q{
   given!(:other_user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
-  given!(:unauthered_answer) { create(:answer, question: question, user: other_user) }
+  given!(:unauthored_answer) { create(:answer, question: question, user: other_user) }
 
   scenario 'Unauthenticated can not edit answers' do
     visit question_path(question)
@@ -47,7 +47,7 @@ feature 'User can edit their own answer', %q{
     end
 
     scenario "tries to edit other user's answer" do
-      expect(page.find(class: 'answer', text: unauthered_answer.body)).to_not have_link 'Edit'
+      expect(page.find(class: 'answer', text: unauthored_answer.body)).to_not have_link 'Edit'
     end
 
     scenario 'edits their answer and attaches several files' do

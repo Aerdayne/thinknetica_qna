@@ -1,0 +1,4 @@
+- unless current_user&.author_of?(resource) || !current_user
+  = link_to '▲', polymorphic_path(resource, action: :upvote), method: :post, remote: true, data: { type: :json }, style: 'font-size:2.0em; text-decoration:none;', class: 'upvote'
+  = link_to '▼', polymorphic_path(resource, action: :downvote), method: :post, remote: true, data: { type: :json }, style: 'font-size:2.0em; text-decoration:none;', class: 'downvote'
+p class='score'= resource.score.to_s

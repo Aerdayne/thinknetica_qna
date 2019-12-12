@@ -1,4 +1,5 @@
 div class='question col-12'
+  = render '/shared/votes', resource: question
   h1= question.title
   - if question.reward
     p style='color:green' Has a reward

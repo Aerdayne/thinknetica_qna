@@ -1,5 +1,6 @@
 = tag.div class: 'answer', data: { id: answer.id }
   hr
+  = render '/shared/votes', resource: answer
   h4 class='card-title' = best_mark(answer)
   - if answer.files.attached?
     ul.answer-files
