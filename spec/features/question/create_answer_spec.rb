@@ -6,7 +6,7 @@ feature 'User can answer a question', %q{
   I'd like to be able to answer a question
 } do
   given(:user) { create(:user) }
-  given(:question) { create(:question, user: user ) }
+  given(:question) { create(:question, user: user) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -44,5 +44,23 @@ feature 'User can answer a question', %q{
     click_on 'Answer'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
+
+  describe 'Multiple sessions', js: true do
+    scenario "answer appears on another user's page" do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+
+        fill_in 'Body', with: 'This is an answer'
+        click_on 'Answer'
+        expect(page).to have_content 'This is an answer'
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+        expect(page).to have_content 'This is an answer'
+      end
+    end
   end
 end
