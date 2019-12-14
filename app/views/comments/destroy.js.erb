@@ -1,0 +1,7 @@
+<% if current_user&.author_of?(comment) %>
+  <% if comment.commentable.is_a? Answer %>
+    $(".answers .comments").find("div[data-id='<%= comment.id %>']").remove();
+  <% else %>
+    $(".question .comments").find("div[data-id='<%= comment.id %>']").remove();
+  <% end %>
+<% end %>

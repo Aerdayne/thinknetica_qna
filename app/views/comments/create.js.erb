@@ -1,0 +1,9 @@
+<% if @comment.persisted? %>
+  <% if resource.is_a? Answer %>
+    $(".answers div[data-id='<%= resource.id %>'] .comments").append('<%= j render @comment %>');
+    $("div[data-id='<%= resource.id %>'] #comment_content").val('');
+  <% else %>
+    $(".question .comments").append('<%= j render @comment %>');
+    $(".question #comment_content").val('');
+  <% end %>
+<% end %>

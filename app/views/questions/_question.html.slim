@@ -41,3 +41,4 @@ div class='question col-12'
         = tag.li class: "question file", data: { file_id: file.id }
           = link_to file.filename.to_s, url_for(file), target: "_blank"
           = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'
+  = render '/shared/comments', resource: question
