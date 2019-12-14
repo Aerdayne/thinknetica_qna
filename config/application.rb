@@ -22,5 +22,7 @@ module Qna
                        routing_specs: false,
                        request_specs: false
     end
+
+    config.action_cable.disable_request_forgery_protection = false
   end
 end

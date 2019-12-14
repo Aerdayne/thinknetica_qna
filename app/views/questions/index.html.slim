@@ -4,7 +4,7 @@ table
     tr
       th= 'Question #'
       th= 'Title'
-  tbody
+  tbody class='questions'
     - questions.each_with_index do |question, index|
       tr
         td= index + 1
