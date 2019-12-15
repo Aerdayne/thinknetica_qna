@@ -78,5 +78,27 @@ function renderAnswer(answer, question_author_id) {
 
   element += form;
 
+  var comments = `
+    <div class="comments">
+      <h4>Comments:</h4>
+    </div>
+  `;
+
+  element += comments;
+
+  if (gon.current_user) {
+    var commentForm = `
+      <form class="comment-form" action="/answers/${answer['id']}/comments" accept-charset="UTF-8" data-remote="true" method="post">
+        <input type="hidden" name="authenticity_token" value="xKTOaPtZTSsA9sxVMOxyYzkjO2qZaDtIdGX61vu1zzxJWgqhTwiTiXv1C1G7c2ZlSgco4ZyInPane5vWCIBCuA==">
+        <div class="form-group">
+          <label for="comment_content">Your comment</label>
+          <input class="form-control" type="text" name="comment[content]" id="comment_content">
+        </div>
+        <input type="submit" name="commit" value="Comment" class="btn btn-primary" data-disable-with="Comment">
+      </form>
+    `;
+    element += commentForm;
+  };
+
   return element;
 };

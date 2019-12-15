@@ -2,7 +2,7 @@ $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
 $(".alert").remove();
 $("#main").prepend('<%= bootstrap_flash %>');
 <% if @answer.persisted? %>
-  $('.answers').append('<%= j render @answer %>');
+  answer = $('.answers').append('<%= j render @answer %>');
   $('.answer-new #answer_body').val('');
   $('.answer-new #answer_files').val('');
   $('.nested-fields').remove();

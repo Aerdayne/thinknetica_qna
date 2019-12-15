@@ -2,16 +2,16 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
 
   expose :comment
-  expose :resource,
-    model: 
-      -> do
-        if params[:question_id]
-          Question
-        else
-          Answer
-        end
-      end,
-    id: -> { params[:question_id] || params[:answer_id] }
+  expose :resource, model: lambda {
+                             if params[:question_id]
+                               Question
+                             else
+                               Answer
+                             end
+                           },
+                    id: -> { params[:question_id] || params[:answer_id] }
+
+  after_action :publish_comment, only: [:create]
 
   def create
     @comment = resource.comments.new(comment_params)
@@ -29,7 +29,21 @@ class CommentsController < ApplicationController
     params.require(:comment).permit(:id, :content)
   end
 
-  def send_json
-    render json: { resource_id: resource.id, comment: @comment, email: @comment.user.email }
+  def publish_comment
+    return if @comment.errors.any?
+
+    question = if resource.is_a? Answer
+                 resource.question
+               else
+                 resource
+               end
+
+    ActionCable.server.broadcast(
+      "question#{question.id}",
+      comment: @comment,
+      resource_id: @comment.commentable_id,
+      resource_type: @comment.commentable_type,
+      user_email: @comment.user.email
+    )
   end
 end
