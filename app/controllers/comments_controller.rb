@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
                end
 
     ActionCable.server.broadcast(
-      "question#{question.id}",
+      "question/#{question.id}/comments",
       comment: @comment,
       resource_id: @comment.commentable_id,
       resource_type: @comment.commentable_type,

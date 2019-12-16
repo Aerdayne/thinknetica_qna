@@ -4,6 +4,6 @@ class CommentsChannel < ApplicationCable::Channel
   def unsubscribed; end
 
   def follow(data)
-    stream_from "question#{data['id']}"
+    stream_from "question/#{data['id']}/comments"
   end
 end
