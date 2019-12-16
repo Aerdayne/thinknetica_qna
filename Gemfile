@@ -34,6 +34,10 @@ gem 'aws-sdk-s3', require: false
 
 gem 'cocoon'
 
+gem 'skim'
+
+gem 'gon'
+
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end

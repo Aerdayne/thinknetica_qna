@@ -7,6 +7,8 @@ class QuestionsController < ApplicationController
   expose :questions, -> { Question.all }
   expose :answers, -> { question.answers }
 
+  after_action :publish_question, only: [:create]
+
   def show
     @answer = Answer.new
     @answer.links.new
@@ -46,9 +48,19 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:body, :title, 
-                                     files: [], 
+    params.require(:question).permit(:body, :title,
+                                     files: [],
                                      links_attributes: [:id, :name, :url, :_destroy],
                                      reward_attributes: [:name, :file])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast(
+      'questions',
+      partial: 'questions/question',
+      locals: { question: @question }
+    )
   end
 end

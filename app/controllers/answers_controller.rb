@@ -7,6 +7,8 @@ class AnswersController < ApplicationController
   expose :answer, scope: -> { Answer.with_attached_files }
   expose :answers, -> { Answer.all }
 
+  after_action :publish_answer, only: [:create]
+
   def create
     @answer = question.answers.new(answer_params)
     @answer.user = current_user
@@ -47,5 +49,15 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:id, :name, :url, :_destroy])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast(
+      "question/#{@answer.question_id}/answers",
+      answer: @answer,
+      question_author_id: @answer.question.user_id
+    )
   end
 end

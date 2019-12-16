@@ -36,3 +36,4 @@
         .answer-links
           = link_to_add_association 'Add link', f, :links, html_options = { partial: 'links/links_fields' }
       = f.submit 'Save', class: 'btn btn-primary'
+  = render '/shared/comments', resource: answer
