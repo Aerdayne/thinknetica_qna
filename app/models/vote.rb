@@ -6,4 +6,12 @@ class Vote < ApplicationRecord
 
   scope :upvotes, -> { where(value: 1) }
   scope :downvotes, -> { where(value: -1) }
+
+  def upvote?
+    value == 1
+  end
+
+  def downvote?
+    value == -1
+  end
 end

@@ -13,6 +13,8 @@ class CommentsController < ApplicationController
 
   after_action :publish_comment, only: [:create]
 
+  authorize_resource
+
   def create
     @comment = resource.comments.new(comment_params)
     @comment.user = current_user
@@ -20,7 +22,9 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    comment.destroy if current_user.author_of?(comment)
+    authorize! :destroy, comment
+
+    comment.destroy
   end
 
   private

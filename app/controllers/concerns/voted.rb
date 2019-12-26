@@ -8,20 +8,20 @@ module Voted
   end
 
   def upvote
-    return head :forbidden if current_user.author_of?(@resource)
+    authorize! :upvote, @resource
 
     vote = @votes.find_by(votable: @resource)
     @resource.unvote(current_user)
-    @resource.upvote(current_user) unless vote
+    @resource.upvote(current_user) unless vote&.upvote?
     send_json
   end
 
   def downvote
-    return head :forbidden if current_user.author_of?(@resource)
+    authorize! :upvote, @resource
 
     vote = @votes.find_by(votable: @resource)
     @resource.unvote(current_user)
-    @resource.downvote(current_user) unless vote
+    @resource.downvote(current_user) unless vote&.downvote?
     send_json
   end
 
