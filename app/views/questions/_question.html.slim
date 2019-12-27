@@ -4,8 +4,9 @@ div class='question col-12'
   - if question.reward
     p style='color:green' Has a reward
   p= question.body
-  - if current_user&.author_of?(question)
+  - if can?(:destroy, question)
     = link_to 'Delete', question_path(question), method: :delete, class: 'btn btn-primary'
+  - if can?(:update, question)
     = link_to 'Edit', '#', data: { question_id: question.id }, class: 'edit-question-link btn btn-primary'
     = form_with model: question, html: { id: "edit-question-#{question.id}" }, class: 'hidden col-12' do |f|
       .form-group
@@ -29,7 +30,7 @@ div class='question col-12'
       - question.links.each do |link|
         = tag.li class: "question-link", data: { link_id: link.id }
           = link_to link.name, link.url, target: '_blank'
-          - if current_user&.author_of?(question)
+          - if can?(:destroy, question)
             = link_to 'Remove link', link_path(id: link.id), method: :delete, remote: true, class: 'btn btn-primary'
           - if link.url_is_gist?
               = javascript_include_tag("#{link.url}.js", 'data-turbolinks-track': 'reload')
@@ -40,5 +41,6 @@ div class='question col-12'
       - question.files.each do |file|
         = tag.li class: "question file", data: { file_id: file.id }
           = link_to file.filename.to_s, url_for(file), target: "_blank"
-          = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'
+          - if can?(:destroy, question)
+            = link_to 'Remove file', attachment_path(id: file.id), method: :delete, remote: true, class: 'btn btn-primary'
   = render '/shared/comments', resource: question

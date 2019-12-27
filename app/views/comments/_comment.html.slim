@@ -2,5 +2,5 @@
   hr
   p = comment.user.email + ' says:'
   p = comment.content
-  - if current_user&.author_of?(comment)
+  - if can?(:destroy, comment)
     = link_to 'Delete', comment_path(comment), method: :delete, data: { comment_id: comment.id, remote: true }, class: 'delete-answer-link btn btn-primary'

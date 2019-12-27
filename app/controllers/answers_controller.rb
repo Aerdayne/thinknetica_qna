@@ -9,6 +9,8 @@ class AnswersController < ApplicationController
 
   after_action :publish_answer, only: [:create]
 
+  authorize_resource
+
   def create
     @answer = question.answers.new(answer_params)
     @answer.user = current_user
@@ -22,27 +24,25 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params) if current_user.author_of?(answer)
+    authorize! :update, answer
+
+    answer.update(answer_params)
     @question = answer.question
   end
 
   def destroy
-    if current_user.author_of?(answer)
-      answer.destroy
-      flash[:notice] = 'Your answer has been successfully removed'
-    else
-      flash[:alert] = 'You are not permitted to delete others\' answers'
-    end
+    authorize! :destroy, answer
+
+    answer.destroy
+    flash[:notice] = 'Your answer has been successfully removed'
   end
 
   def set_best
+    authorize! :set_best, answer
+
     @question = answer.question
-    if current_user.author_of?(@question)
-      answer.set_best
-      flash[:notice] = 'You have marked the best answer to your question'
-    else
-      flash[:alert] = 'You are not permitted to mark answers to others\' questions'
-    end
+    answer.set_best
+    flash[:notice] = 'You have marked the best answer to your question'
   end
 
   private
