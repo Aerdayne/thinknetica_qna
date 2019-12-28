@@ -23,6 +23,20 @@ Rails.application.routes.draw do
   resource :link, only: :destroy
   resources :rewards, only: :index
 
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        collection do
+          get :me
+          get :others
+        end
+      end
+      resources :questions, only: %i[show index create update destroy], shallow: true do
+        resources :answers, only: %i[show index create update destroy]
+      end
+    end
+  end
+
   root to: 'questions#index'
 
   mount ActionCable.server => '/cable'
