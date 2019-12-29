@@ -7,6 +7,10 @@ RSpec.describe AnswersController, type: :controller do
   let(:other_user) { create(:user) }
   let(:other_answer) { create(:answer, :other, user: other_user, question: question) }
 
+  it_behaves_like 'Controller_Votable' do
+    let(:resource) { answer }
+  end
+
   describe 'POST #create' do
     context 'authored' do
       before { login(user) }
@@ -154,80 +158,6 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'gets an invalid response' do
-        expect(response.status).to eq(401)
-      end
-    end
-  end
-
-  describe 'POST #upvote' do
-    context 'authored' do
-      before do
-        login(other_user)
-        post :upvote, params: { id: answer }, format: :json
-      end
-
-      it 'creates an upvote' do
-        answer.reload
-
-        expect(answer.votes.upvotes.count).to eq(1)
-      end
-
-      it 'changes the score' do
-        answer.reload
-
-        expect(answer.score).to eq(1)
-      end
-    end
-
-    context 'unauthored' do
-      before do
-        post :upvote, params: { id: answer }, format: :json
-      end
-
-      it 'does not upvote' do
-        answer.reload
-
-        expect(answer.votes.count).to eq(0)
-      end
-
-      it 'gets a response with forbidden status' do
-        expect(response.status).to eq(401)
-      end
-    end
-  end
-
-  describe 'POST #downvote' do
-    context 'authored' do
-      before do
-        login(other_user)
-        post :downvote, params: { id: answer }, format: :json
-      end
-
-      it 'creates a downvote' do
-        answer.reload
-
-        expect(answer.votes.downvotes.count).to eq(1)
-      end
-
-      it 'changes the score' do
-        answer.reload
-
-        expect(answer.score).to eq(-1)
-      end
-    end
-
-    context 'unauthored' do
-      before do
-        post :downvote, params: { id: answer }, format: :json
-      end
-
-      it 'does not downvote' do
-        answer.reload
-
-        expect(answer.votes.count).to eq(0)
-      end
-
-      it 'gets a response with forbidden status' do
         expect(response.status).to eq(401)
       end
     end

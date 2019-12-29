@@ -6,39 +6,33 @@ ruby '2.6.3'
 gem 'rails', '~> 6.0.1'
 
 gem 'devise'
-
 gem 'pg'
-
 gem 'puma', '~> 4.3'
-
 gem 'sass-rails', '>= 6'
-
 gem 'webpacker', '~> 4.0'
-
 gem 'turbolinks', '~> 5'
-
 gem 'jbuilder', '~> 2.7'
-
 gem 'bootsnap', '>= 1.4.2', require: false
-
 gem 'jquery-rails'
-
+gem 'twitter-bootstrap-rails'
+# Template generator
 gem 'html2slim'
 gem 'slim-rails'
-
+# Controller helpers
 gem 'decent_exposure'
-
-gem 'twitter-bootstrap-rails'
-
+# AWS API
 gem 'aws-sdk-s3', require: false
-
+# Nested forms
 gem 'cocoon'
-
-gem 'skim'
-
+# Controller data in JS
 gem 'gon'
-
+# Authorization
 gem 'cancancan'
+# Auth code flow
+gem 'doorkeeper'
+
+gem 'active_model_serializers', '~> 0.10'
+gem 'oj'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

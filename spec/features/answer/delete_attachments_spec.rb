@@ -21,7 +21,7 @@ feature 'User can delete files attached to their answer', %q{
       click_on 'Answer'
 
       page.find(class: 'answer-files', text: 'rails_helper.rb').click_on 'Remove file'
-      expect(page).to_not have_content 'rails_helper.rb'
+      expect(page.find(class: 'answer-files')).to_not have_content 'rails_helper.rb'
     end
 
     scenario "tries to delete a file from other user's answer" do
