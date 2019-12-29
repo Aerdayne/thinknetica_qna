@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_28_085902) do
+ActiveRecord::Schema.define(version: 2019_12_29_143842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,16 @@ ActiveRecord::Schema.define(version: 2019_12_28_085902) do
     t.index ["user_id"], name: "index_rewards_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "question_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id", "user_id"], name: "index_subscriptions_on_question_id_and_user_id", unique: true
+    t.index ["question_id"], name: "index_subscriptions_on_question_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -167,5 +177,7 @@ ActiveRecord::Schema.define(version: 2019_12_28_085902) do
   add_foreign_key "questions", "users"
   add_foreign_key "rewards", "questions"
   add_foreign_key "rewards", "users"
+  add_foreign_key "subscriptions", "questions"
+  add_foreign_key "subscriptions", "users"
   add_foreign_key "votes", "users"
 end

@@ -1,0 +1,5 @@
+h1 A question you've subscribed to got answered!
+p= "There's a new answer to the question: "
+= link_to @question.title, question_url(@question, host: url_options[:host])
+p= "Answer: "
+= link_to @answer.body, answer_url(@answer, host: url_options[:host])

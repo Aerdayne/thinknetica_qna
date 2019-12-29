@@ -12,12 +12,16 @@ class QuestionsController < ApplicationController
   authorize_resource
 
   def show
+    authorize! :show, question
     @answer = Answer.new
+
     @answer.links.new
   end
 
   def new
     @question = Question.new
+    authorize! :new, @question
+
     @question.links.new
     @reward = Reward.new
     @question.reward = @reward
@@ -25,8 +29,10 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
+    authorize! :create, @question
 
     if @question.save
+      current_user.subscriptions.create(question: @question)
       redirect_to @question, notice: 'Your question has been successfully created.'
     else
       render :new
@@ -45,6 +51,18 @@ class QuestionsController < ApplicationController
 
     question.destroy
     redirect_to questions_path, notice: 'Your question has been successfully deleted'
+  end
+
+  def subscribe
+    authorize! :subscribe, question
+
+    question.subscribe(current_user)
+  end
+
+  def unsubscribe
+    authorize! :unsubscribe, question
+
+    question.unsubscribe(current_user)
   end
 
   private

@@ -17,6 +17,7 @@ class AnswersController < ApplicationController
     @answer.save
 
     if @answer.persisted?
+      AnswerNotificationJob.perform_later(@answer)
       flash.now[:notice] = 'Your answer has been successfully created.'
     else
       flash.now[:alert] = 'Your answer has not been created.'

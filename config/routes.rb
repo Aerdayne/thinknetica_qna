@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   end
 
   resources :questions, concerns: %i[votable commentable], shallow: true do
+    post :subscribe, on: :member
+    delete :unsubscribe, on: :member
     resources :answers, concerns: %i[votable commentable], except: :index do
       patch :set_best, on: :member
     end
