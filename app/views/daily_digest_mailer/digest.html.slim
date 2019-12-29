@@ -1,0 +1,4 @@
+h1 Daily digest
+p Here are there questions that have been created in the past 24 hours:
+ul= @questions.each do |question|
+  li= link_to question.title, question_url(question, host: url_options[:host])
