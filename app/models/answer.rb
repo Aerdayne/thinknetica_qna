@@ -25,4 +25,8 @@ class Answer < ApplicationRecord
       question.reward&.update!(user: user)
     end
   end
+
+  def notify_subscribers
+    AnswerNotificationJob.perform_later(self)
+  end
 end

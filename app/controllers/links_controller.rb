@@ -9,10 +9,4 @@ class LinksController < ApplicationController
 
     link.destroy
   end
-
-  private
-
-  def attachment_params
-    params.require(:link).permit(:id)
-  end
 end

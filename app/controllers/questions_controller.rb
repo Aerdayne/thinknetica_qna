@@ -32,7 +32,7 @@ class QuestionsController < ApplicationController
     authorize! :create, @question
 
     if @question.save
-      current_user.subscriptions.create(question: @question)
+      @question.subscribe(current_user)
       redirect_to @question, notice: 'Your question has been successfully created.'
     else
       render :new
@@ -51,18 +51,6 @@ class QuestionsController < ApplicationController
 
     question.destroy
     redirect_to questions_path, notice: 'Your question has been successfully deleted'
-  end
-
-  def subscribe
-    authorize! :subscribe, question
-
-    question.subscribe(current_user)
-  end
-
-  def unsubscribe
-    authorize! :unsubscribe, question
-
-    question.unsubscribe(current_user)
   end
 
   private

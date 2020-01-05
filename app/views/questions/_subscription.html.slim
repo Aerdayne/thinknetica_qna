@@ -1,6 +1,0 @@
-div class = 'subscription'
-  - if can?(:subscribe, question)
-    = link_to 'Subscribe', subscribe_question_path(question), method: :post, remote: true, class: 'subscribe'
-  - if can?(:unsubscribe, question)
-    = link_to 'Unsubscribe', unsubscribe_question_path(question), method: :delete, remote: true, class: 'unsubscribe'
-  
