@@ -6,6 +6,7 @@ class Question < ApplicationRecord
 
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
+  has_many :subscriptions, dependent: :destroy
 
   has_one :reward, dependent: :destroy
 
@@ -15,4 +16,12 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :reward, reject_if: :all_blank
 
   validates :title, :body, :score, presence: true
+
+  def subscribe(user)
+    subscriptions.create!(user_id: user.id)
+  end
+
+  def unsubscribe(user)
+    subscriptions.where(user_id: user.id).delete_all
+  end
 end

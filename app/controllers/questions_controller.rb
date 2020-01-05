@@ -12,12 +12,16 @@ class QuestionsController < ApplicationController
   authorize_resource
 
   def show
+    authorize! :show, question
     @answer = Answer.new
+
     @answer.links.new
   end
 
   def new
     @question = Question.new
+    authorize! :new, @question
+
     @question.links.new
     @reward = Reward.new
     @question.reward = @reward
@@ -25,8 +29,10 @@ class QuestionsController < ApplicationController
 
   def create
     @question = current_user.questions.new(question_params)
+    authorize! :create, @question
 
     if @question.save
+      @question.subscribe(current_user)
       redirect_to @question, notice: 'Your question has been successfully created.'
     else
       render :new

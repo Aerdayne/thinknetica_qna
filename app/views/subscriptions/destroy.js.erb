@@ -1,0 +1,4 @@
+$('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
+$(".alert").remove();
+$("#main").prepend('<%= bootstrap_flash %>');
+$('.subscription').html('<%= j render partial: 'subscription' %>');

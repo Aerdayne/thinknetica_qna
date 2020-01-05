@@ -8,10 +8,4 @@ class AttachmentsController < ApplicationController
 
     @file.purge
   end
-
-  private
-
-  def attachment_params
-    params.require(:attachment).permit(:id)
-  end
 end

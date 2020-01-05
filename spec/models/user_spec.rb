@@ -8,10 +8,12 @@ RSpec.describe User, type: :model do
   it { should have_many(:questions).dependent(:destroy) }
   it { should have_many(:rewards).dependent(:nullify) }
   it { should have_many(:comments).dependent(:nullify) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
+
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   describe '#author_of?' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
     let(:other_user) { create(:user) }
 
     it 'is true' do
@@ -20,6 +22,16 @@ RSpec.describe User, type: :model do
 
     it 'is false' do
       expect(other_user).to_not be_author_of(question)
+    end
+  end
+
+  describe '#find_subscription' do
+    before do
+      question.subscribe(user)
+    end
+
+    it 'returns a subscription' do
+      expect(user.find_subscription(question)).to eq(question.subscriptions.first)
     end
   end
 end
